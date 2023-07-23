@@ -24,5 +24,19 @@ Download the repo and:
 python primeGapper.py <N> #give the patterns and the primes below N.  
 ex: python primeGapper.py 100
 
+# Advanced Info
+In the pattern form: {a,(b,c,d,e,..)*} for prime p, we can derive the next pattern as:  
+The next prime = p+a  
+In b,c,d,e,.. remove the element that is a multiple of p+a. The first element is b (or p+a+b). 
+(p+a+b) mod (p+a) = b (assume that b < p+a).  Now the element b repeats after pf(p).  Since p+a is not a factor  
+of pf(p) we can apply the modVattam theorem (mod circle) and find the occurence of b where the mod is zero (i.e. it is  
+divisible by p+a). There will be only one occurence in the periodic pattern for p+a. That occurence can be eliminated.  
+The same is done for all b,c,d,e.. and the new pattern can be derived.
+
+The modVattam theorem is that the mode goes thru all possible numbers for m and n where m and n have no common factors as m  
+goes from m ... nm. Example: 2 and 3 => mods are 2%3=2, 4%3=1 6%3=0.  The method of its application here is (p+a+b)%(p+a) which is  
+b, (p+a+b+pf(p))%(p+a) = 
+
+
 
 
