@@ -27,33 +27,16 @@ class PrimeGapper:
             for p in self.primes: rp=rp*i
             self.repeatPeriod = rp
 
-    def getGapsNew(self,startPr,pattern):        
-        #calculate the new values
-        nextPrime=startPr+pattern[0]
-        self.updatePrParams(nextPrime)
-        #Algorithm to get the next pattern:
-        #1. Expand the existing pattern to cover the new repeatPeriod
-        #2. In the expanded pattern remove the numbers that are mod 0 for the new prime:
-        #2a. Create a table of circular mods of old repeatPeriod with the new prime
-        #2b. Find where each term in the old repeatPeriod has a mod 0. Mark this to be 'removed' in the expanded pattern
-        #3. Collapse the expanded pattern to get the new pattern
-        # These will be (nextPrime^2), nextPrime*(nextPrime+gap1), (nextPrime*(nextPrime+gap1+gap2..)) 
-        #1.
-        repPart=pattern[2:]
-        repPart.append(pattern[1])
-        repSum= sum(repPart)
-        repTimes = math.ceil(self.repeatPeriod/repSum)
-        tPattern=[]
-        for i in range(repTimes):tPattern.extend(repPart)
-        #2a: create the modVattam table
-        mv=[0]
-        for i in range(repTimes):
-            mv[i] = i*repSum % nextPrime
-        
-
-
 
     def getGaps(self,startPr,pattern):
+        '''
+        Algorithm: startPr= starting Prime and pattern is its pattern
+        The next prime is found, and the pattern is expanded to cover the
+        next prime's pattern (called expanded pattern). The expanded pattern
+        is reduced by eliminating the numbers that are divisible by the new 
+        prime.
+        Note: The modVattam theorem is used
+        '''
         def eliminate(patt,idxToEliminate):
             #2 The cells to be removed are marked with a -1 and then all -1's are removed
             for dIdx in idxToEliminate:
