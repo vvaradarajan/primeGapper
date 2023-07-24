@@ -1,23 +1,23 @@
 # primeGapper
 Explores gaps between primes
-The gaps between primes seems to follow a continuously changing pattern and this repo is to explore that pattern. The exact details of that pattern are in a different document and the reader is asked to accept the examples below so that we can quickly get to the program:  
+The gaps between primes seems to follow a continuously changing pattern and this repo is to explore that pattern. The exact details of that pattern are not that complex and is demonstrated with examples.    
 
 ## Preamble
-Candidate Primes are number that are not divisible by any prime <= P
+Candidate Primes after a prime p are numbers that are not divisible by any prime <= p
 Ex: p=2 => candidate primes are 3,5,7,9..; p=3 => 5,7,11,13,17,19,23..
 
 ## Hypothesis
-The hypothesis is Candidate Primes follow a 'gap' pattern:  
+The hypothesis is that the gap between Candidate Primes follow a pattern:  
 cp(p) = p+a+(c,d,e,f..)\* (*=the pattern enclosed in brackets repeats).  
 g(p) = cp - p = a+(c,d,e,f..)\* where g(p) is the gap between primes
 Ex: g(2) = 1+(2)* = 1,2,2,..=> cp(2) = 3,5,7,9..
 
-
+<b>Observations</b>  
 1.  cp(p1) is a subset of cp(p) for p1 > p (i.e. cp(p) = numbers not divisible by primes upto p, and cp(p1) = number not divisible by primes upto P AND number not divisible by primes upto P1)  
 
 
 ## Examples:
-Taking the first prime as 2: The prime gap function is g(2) = {1,(2)\*} . The (2)\* is a continuing sequence of 2's and is the repeating part. The repeating part adds up to 2 = pf(2)  
+Taking the first prime as 2: The prime gap function is g(2) = {1,(2)\*} . The (2)\* is a continuing sequence of 2's and is the repeating part. The repeating part adds up to 2.  
 
 Using this pattern the next primes are: 2+1 = 3, 3+2 = 5, 5+2 = 7, ..9, 11, 13 ...  
 Here '9' is not a prime, and so we have to create a new pattern by including the number 3 as a prime..
@@ -45,7 +45,7 @@ pf(5) = all primes 5 and below multiplied = 2x3x5 = 30 => pattern is {2,(4,2,4,2
 ## On To The Program
 The primeGapper process described about is related to the 'Eratothesnes Sieve'.  
 The program finds the patterns starting from 1 (special prime, that does not divide anything) and continues with the next prime and so on.  
-It is in Python using normal python integers and works upto about 31.  The failure after that is probably due to number overflow or the size of the pattern being too large for the memory etc.
+It is in Python using normal python integers and works upto about 800.  The failure after that is probably due to number overflow or the size of the pattern being too large for the memory etc.
 
 The algorithm in the program is based on the gap pattern. It starts with the gap pattern for 1 =>{1,(1)\*}.  Note that 1 is not considered a prime, and so this pattern simply states that all numbers are candidate primes for 1.  
 From this it divines pattern for the next prime (i.e. next prime = 1+the first term in the pattern which is 1+1=2). The pattern is determined by expanding the pattern using the prime factorial (i.e. 2*1 =2 and the modVattam theorem) and it is {1,(2)\*}.  
@@ -58,11 +58,11 @@ To Validate the program, a routine to find the prime numbers below N has been co
 Download the repo and:  
 python primeGapper.py <N> #give the patterns and the primes below N.  
 ex: python primeGapper.py 100  
-<b>Output<b>:  
+<b>Output</b>:  
 INFO - There are 25 primes below 100:  
 [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
 
-# Some details:
+# Some details:  
 In the pattern form: {a,(b,c,d,e,..)*} for prime p, we can derive the next pattern as:  
 The next prime = p+a  
 In b,c,d,e,.. remove the element that is a multiple of p+a. The first element is b (or p+a+b). 
