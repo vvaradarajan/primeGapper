@@ -71,7 +71,53 @@ of pf(p) we can apply the modVattam theorem (mod circle) and find the occurence 
 divisible by p+a). There will be only one occurence in the periodic pattern for p+a. That occurence can be eliminated.  
 The same is done for all b,c,d,e.. and the new pattern can be derived.
 
+# Onward to conjectures...
 
+The modVattam theorem and a circular shift of the repeating pattern gives us a way of deriving the next pattern for cp's (i.e. candidate primes):
+2 => {1,(2)\*} (to reiterate, the cp's for 2 are 3,5,7,9..)
+3 => {2,(2,4)*}.. To derive this the method is to look at the two parts: The first number and the repeating part.  
+a. The first number is simpley 'shift left' which is bump off the 1 and the next number 2 moves into its place.  
+so now we have 3 => {2,(2)\*}
+b. We know that the sum of the repeating part should be 2*3 = 6 for the prime 3. So expand the (2)\* to (2,2,2)\*
+c. These (2,2,2) represent the cp's 3+2+2, 3+2+2+2, 3+2+2+2+2 = 7,9,11 and the number 9 is divisible by 3. So that can be eliminated, which makes the gap 2+2=4.  
+so 3 => {2,(2,4)*}
+
+The primeGapper program does these steps and produces the interesting printouts.  
+To get the next pattern for prime p+1 we just shift left and repeat the previous pattern as indicated above.  This can be written like a inductive relation:
+patt(p+1) = f(patt(p))  and patt(2) = [1,(1)\*]   
+In the printout below '-01' under pattern means that the element has been removed. Corresponding to that the prime is shown as '000'.  
+
+The formula for the number of terms in the pattern is:  
+nt(p) = nt(p-1)*p - nt(p-1)
+Ex: nt(3) = nt(2)*3 - nt(2) = 1\*3 -1 =2
+Ex: nt(5) = nt(3)*5 - nt(3) = 10-2 = 8
+
+
+
+Here are the interesting printouts from the primeGapper:
+
+INFO - Pattern for prime: 2, length of pattern= 2  
+INFO - [1, (1)\*]  
+INFO - p = 2, sp: len = 1, ngp = 1, idxToDelete: [1]  
+INFO - pattern line => corresponding primes:  
+INFO - ['002'] => ['005']  
+INFO - ['-01'] => ['000']  
+INFO - Pattern for prime: 3, length of pattern= 2  
+INFO - [1, (2)\*]  
+INFO - p = 3, sp: len = 1, ngp = 2, idxToDelete: [2]  
+INFO - pattern line => corresponding primes:  
+INFO - ['002'] => ['007']  
+INFO - ['004'] => ['011']  
+INFO - ['-01'] => ['000']  
+INFO - Pattern for prime: 5, length of pattern= 3  
+INFO - [2, (2, 4)*]  
+INFO - p = 5, sp: len = 2, ngp = 2, idxToDelete: [9, 6]  
+INFO - pattern line => corresponding primes:  
+INFO - ['004', '002'] => ['011', '013']  
+INFO - ['004', '002'] => ['017', '019']  
+INFO - ['004', '006'] => ['023', '029']  
+INFO - ['-01', '002'] => ['000', '031']  
+INFO - ['006', '-01'] => ['037', '000']  
 
 
 

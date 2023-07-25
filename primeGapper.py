@@ -27,6 +27,25 @@ class PrimeGapper:
             for p in self.primes: rp=rp*i
             self.repeatPeriod = rp
 
+    @staticmethod
+    def getPrimesFromGaps(p,ep):
+        acc=p+ep[0]
+        primes=[]
+        for x in ep[1:]:
+            if x < 0: primes.append(0)
+            else: primes.append(acc:= acc+x)
+        return primes
+
+
+    @staticmethod
+    def markForElimination(patt,idxToEliminate):
+        #2 The cells to be removed are marked with a -1 and then all -1's are removed
+        for dIdx in idxToEliminate:
+            if dIdx==len(patt) -1:
+                patt[dIdx] += patt[0]
+            else:
+                patt[dIdx] +=patt[dIdx+1]
+                patt[dIdx+1]=-1 #marker means to remove
 
     def getGaps(self,startPr,pattern):
         '''
@@ -37,14 +56,9 @@ class PrimeGapper:
         prime.
         Note: The modVattam theorem is used
         '''
+        
         def eliminate(patt,idxToEliminate):
-            #2 The cells to be removed are marked with a -1 and then all -1's are removed
-            for dIdx in idxToEliminate:
-                if dIdx==len(patt) -1:
-                    patt[dIdx] += patt[0]
-                else:
-                    patt[dIdx] +=patt[dIdx+1]
-                    patt[dIdx+1]=-1 #marker means to remove
+            PrimeGapper.markForElimination(patt,idxToEliminate)
             #logger.info(f'nextPrime: {nextPrime}, repeatPeriod = {repeatPeriod}; nPattern= {patt}')
             return [g for g in patt if g>0]
         
@@ -61,6 +75,7 @@ class PrimeGapper:
         def createMvd(p,sp,ep):
             #crate the modVattam distance for each cp in ep
             #p=prime, sp=sub pattern (ex: for 5 it is 4,2)
+            #ep = expanded pattern
             sSp = sum(sp)
             lSp = len(sp)
             xv = ep[0]
@@ -83,12 +98,15 @@ class PrimeGapper:
                         t1 = t1 % p
                         n +=1
             #print(f'mv={mv}, sSp={sSp}, idxToDelete={idxToDelete}')
+            PrimeGapper.printRectPattern(p,sp,ep,idxToDelete)
             patt = eliminate(ep,idxToDelete)
+
             #self.printPattern(p,patt)
             return p,patt
             #create the idx to delete
 
         p,sp,patt = getExpandedPattern(startPr,pattern)
+        self.printPattern(p,pattern)
         return createMvd(p,sp,patt)
 
 
@@ -105,12 +123,29 @@ class PrimeGapper:
         #print using a format like [1,(n,n2..)*]
         lp = 60 #print upto here and then ...
         logger.info(f'Pattern for prime: {pr}, length of pattern= {len(patt)}')
+        part2=patt[1:]
+        
         if logger.level == logging.INFO or len(patt)<=10:
             part2= f'{patt[1:]}'
         else: part2=f'{patt[1:lp]}..'
         part2=part2.replace('[','').replace(']','')    
 
         logger.info(f'[{patt[0]}, ({part2})*]')
+
+    @staticmethod
+    def printRectPattern(p,sp,ep,idxToDelete):
+        ngp=ep[0]
+        nep=ep[:]
+        lsp = len(sp)
+        logger.info(f'p = {p}, sp: len = {lsp}, ngp = {ngp}, idxToDelete: {idxToDelete}')
+        lines=int((len(ep)-1)/lsp)
+        PrimeGapper.markForElimination(nep,idxToDelete)
+        logger.info('pattern line => corresponding primes:')
+        for i in range(lines):
+            primes = PrimeGapper.getPrimesFromGaps(p,nep)
+            pLine = [f'{x:03d}' for x in nep[i*lsp+1:i*lsp+1+lsp]]
+            pLine1 = [f'{x:03d}' for x in primes[i*lsp:i*lsp+lsp]]
+            logger.info(f'{pLine} => {pLine1}')
 
     def findPrimesBelowN(self,N):
         #Algorithm:
@@ -123,7 +158,7 @@ class PrimeGapper:
 
         while True:
             nxtp,newp=self.getGaps(nxtp,newp)
-            self.printPattern(nxtp,newp)
+            #self.printPattern(nxtp,newp)
             primes.append(nxtp)
             if nxtp > lowestP: break
         #accumulate the candidate primes less than N into primes
